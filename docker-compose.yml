@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  heatmap-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: heatmap-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./inputs:/app/inputs
+      - ./static:/app/static
+    restart: unless-stopped
