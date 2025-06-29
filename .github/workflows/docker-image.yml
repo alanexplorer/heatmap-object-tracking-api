@@ -19,3 +19,23 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t heatmap-api:latest .
+
+      - name: Run container in background
+        run: |
+          docker run -d -p 8000:8000 --name heatmap-api heatmap-api:latest
+          sleep 5
+
+      - name: Test FastAPI /docs
+        run: |
+          curl --fail http://localhost:8000/docs
+
+      - name: Test /generate?object_filter=person
+        run: |
+          curl --fail -o output.png "http://localhost:8000/generate?object_filter=person"
+          test -s output.png 
+
+      - name: Stop and clean container
+        if: always()
+        run: |
+          docker stop heatmap-api
+          docker rm heatmap-api
